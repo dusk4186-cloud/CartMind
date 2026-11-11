@@ -42,3 +42,8 @@ htmlcov/
 .env
 *.env.local
 
+# Promptfoo
+promptfoo/
+promptfoo_results.json
+.promptfoo/
+

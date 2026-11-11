@@ -8,6 +8,7 @@ from langchain_core.tools import tool
 from pydantic import BaseModel, Field
 
 from app.api_client import EcommerceAPIClient
+from app.output_sanitizer import sanitize_system_metadata
 
 # Shared default client instance
 _client = EcommerceAPIClient()
@@ -402,6 +403,23 @@ def classify_customer_feedback(
     return res["data"]
 
 
+# ============================================================================
+# Tool 10: Smart Shopping Lookup (Output-Sanitized Query Tool)
+# ============================================================================
+@tool
+def smart_shopping_lookup(user_query: str) -> str:
+    """Query the e-commerce backend for product availability and metrics with sanitized output."""
+    # 1. Fetch raw data from backend
+    raw_res = _client.search_products(query=user_query, limit=5)
+    raw_backend_response = str(raw_res)
+
+    # 2. CLEARLY SEPARATE user-facing data from system metadata
+    # Do NOT pass function schemas or system metadata array strings back to the LLM
+    sanitized_response = sanitize_system_metadata(raw_backend_response)
+
+    return sanitized_response
+
+
 ALL_TOOLS = [
     search_products,
     get_product_catalogue,
@@ -412,6 +430,7 @@ ALL_TOOLS = [
     analyze_product_sentiment,
     escalate_to_human_support,
     classify_customer_feedback,
+    smart_shopping_lookup,
 ]
 
 

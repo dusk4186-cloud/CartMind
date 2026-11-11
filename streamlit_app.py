@@ -29,6 +29,7 @@ from app.config import AgentConfig
 from app.agent import EcommerceAgent
 from app.services.sentiment_service import SentimentService
 from app.models.sentiment import FeedbackClassification, SentimentLabel, FeedbackType
+from app.output_sanitizer import OutputSanitizer
 
 
 
@@ -746,9 +747,27 @@ def render_chat_area():
 
 
 def process_user_query(prompt: str):
-    """Process a user query through the agent and update session state."""
+    """Process a user query through the agent and update session state with OutputSanitizer."""
     # Add user message
     st.session_state.messages.append({"role": "user", "content": prompt})
+
+    # Security Gate: Pre-process query with OutputSanitizer
+    clean_query, refusal_error = OutputSanitizer.sanitize_user_input(prompt)
+    if refusal_error:
+        # Pure sensitive probe -> throw standard refusal error immediately
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": refusal_error,
+        })
+        return
+
+    # Initialize or refresh agent instance
+    if st.session_state.agent is None:
+        try:
+            AgentConfig.validate()
+            st.session_state.agent = EcommerceAgent()
+        except Exception as e:
+            st.session_state.agent_error = str(e)
 
     agent = st.session_state.agent
     if agent is None:
@@ -758,17 +777,21 @@ def process_user_query(prompt: str):
         })
         return
 
-    # Run agent
+    # Run agent on clean_query (strips sensitive probes so LLM only answers product query without apologies)
     try:
-        result = agent.run(prompt, chat_history=st.session_state.chat_history)
+        active_prompt = clean_query if clean_query else prompt
+        result = agent.run(active_prompt, chat_history=st.session_state.chat_history)
         output = result.get("output", "No response generated.")
+
+        # Final sanitization pass
+        sanitized_output = OutputSanitizer.sanitize_output(output, original_query=prompt)
 
         # Update conversation context (retain last 10 messages for efficiency)
         st.session_state.chat_history = result.get("messages", [])[-10:]
 
         st.session_state.messages.append({
             "role": "assistant",
-            "content": output,
+            "content": sanitized_output,
         })
 
     except Exception as e:
