@@ -244,13 +244,27 @@ def inject_custom_css():
         .hero-header h1 {
             font-size: var(--font-size-2xl);
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .hero-title-gradient {
             background: linear-gradient(135deg, #6c63ff 0%, #14b8a6 50%, #22c55e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: var(--space-sm);
-            letter-spacing: -0.02em;
-            line-height: 1.1;
+        }
+        .hero-icon-svg {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-text-fill-color: initial !important;
+            background: none !important;
+            flex-shrink: 0;
         }
         .hero-header p {
             font-size: var(--font-size-base);
@@ -672,6 +686,11 @@ def star_rating_html(rating: float, count: int) -> str:
     return f'<span class="rating-display">{stars} {rating:.1f} ({count})</span>'
 
 
+def clean_html(html_str: str) -> str:
+    """Strip leading and trailing whitespace from each line so CommonMark markdown never parses it as a code block."""
+    return "\n".join(line.strip() for line in html_str.strip().splitlines())
+
+
 def product_card_html(product: Dict) -> str:
     """Build a premium product card HTML block."""
     name = product.get("name", "Unknown")
@@ -690,7 +709,7 @@ def product_card_html(product: Dict) -> str:
         price_html += f'<span class="card-original-price">₹{original:,.0f}</span>'
         price_html += f'<span class="card-discount">-{discount:.0f}%</span>'
 
-    return f"""
+    return clean_html(f"""
     <div class="product-card">
         <div class="card-header-row">
             <div>
@@ -705,7 +724,7 @@ def product_card_html(product: Dict) -> str:
         </div>
         <div class="card-sku">{pid}</div>
     </div>
-    """
+    """)
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -843,15 +862,24 @@ def render_chat_area():
     # ── Hero Header & 1-Click Sample Scenarios (when chat is empty) ──
     if not st.session_state.messages:
         st.markdown(
-            """
+            clean_html("""
             <div class="hero-header">
-                <h1>🛒 Smart Shopping Assistant</h1>
+                <h1>
+                    <span class="hero-icon-svg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#6c63ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="8" cy="21" r="1"></circle>
+                            <circle cx="19" cy="21" r="1"></circle>
+                            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                        </svg>
+                    </span>
+                    <span class="hero-title-gradient">Smart Shopping Assistant</span>
+                </h1>
                 <p>
                     Ask about products, compare prices, analyze customer reviews, or verify stock availability.
                     Click any sample prompt below to test CartMind instantly:
                 </p>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
@@ -991,7 +1019,7 @@ def feedback_card_html(card: FeedbackClassification) -> str:
         else ""
     )
 
-    return f"""
+    return clean_html(f"""
     <div class="feedback-card">
         <div>
             <div class="feedback-card-header">
@@ -1011,20 +1039,78 @@ def feedback_card_html(card: FeedbackClassification) -> str:
             <span class="{routing_badge_class}">{routing_val}</span>
         </div>
     </div>
-    """
+    """)
+
+
+def pipeline_card_classification_html(sentiment: str, categorization: str, feedback_area: str, title: str = "🏷️ Sentiment & Category") -> str:
+    """Build an unindented classification card HTML string."""
+    return clean_html(f"""
+    <div class="pipeline-card">
+        <div class="pipeline-card-title">{title}</div>
+        <p class="feedback-section-title">SENTIMENT</p>
+        <p class="feedback-response-text">{sentiment}</p>
+        <p class="feedback-section-title">INTENT</p>
+        <p class="feedback-response-text">{categorization}</p>
+        <p class="feedback-section-title">FEEDBACK AREA</p>
+        <p class="feedback-response-text">{feedback_area}</p>
+    </div>
+    """)
+
+
+def pipeline_card_response_html(response_text: str, title: str = "💬 Suggested Response") -> str:
+    """Build an unindented auto-response card HTML string."""
+    return clean_html(f"""
+    <div class="pipeline-card">
+        <div class="pipeline-card-title">{title}</div>
+        <p class="feedback-section-title">GENERATED RESPONSE</p>
+        <p class="feedback-response-text">“{response_text}”</p>
+    </div>
+    """)
+
+
+def pipeline_card_routing_html(target_val: str, action: str, priority: str, title: str = "🚀 Support Action & Routing") -> str:
+    """Build an unindented support workflow routing card HTML string."""
+    if target_val == "Jira":
+        target_badge_class = "badge-target-jira"
+    elif target_val == "ServiceNow":
+        target_badge_class = "badge-target-servicenow"
+    elif target_val == "Customer service email":
+        target_badge_class = "badge-target-email"
+    else:
+        target_badge_class = "badge-routing-na"
+
+    return clean_html(f"""
+    <div class="pipeline-card">
+        <div class="pipeline-card-title">{title}</div>
+        <p class="feedback-section-title">ROUTING TARGET</p>
+        <p><span class="{target_badge_class}">{target_val}</span></p>
+        <p class="feedback-section-title">ACTION</p>
+        <p class="feedback-response-text">{action}</p>
+        <p class="feedback-section-title">PRIORITY</p>
+        <p class="feedback-response-text">{priority.upper()}</p>
+    </div>
+    """)
 
 
 def render_feedback_intelligence_tab():
     """Render the Sentiment Analysis dashboard with feedback cards and live classifier."""
     st.markdown(
-        """
+        clean_html("""
         <div class="hero-header">
-            <h1>📊 Customer Sentiment Analysis</h1>
+            <h1>
+                <span class="hero-icon-svg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        <path d="M14.8 7.5a1.8 1.8 0 0 0-2.5 0L12 7.8l-.3-.3a1.8 1.8 0 0 0-2.5 2.5l2.8 2.8 2.8-2.8a1.8 1.8 0 0 0 0-2.5z"></path>
+                    </svg>
+                </span>
+                <span class="hero-title-gradient">Customer Sentiment Analysis</span>
+            </h1>
             <p>
                 Real-time sentiment detection, intent classification, suggested auto-replies, and customer support routing.
             </p>
         </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
@@ -1041,45 +1127,9 @@ def render_feedback_intelligence_tab():
 
     st.divider()
 
-    # ── Multi-Agent Architecture Overview ──
-    st.markdown("### 🕸️ Multi-Agent Architecture Overview")
-    st.caption("Coordinates 3 specialized agents: Sentiment Classification, Auto-Reply Generation, and Support Routing under LangGraph.")
-
-    st.markdown(
-        """
-        ```
-                            ┌───────────────────────────────┐
-                            │         Input: Review         │
-                            └───────────────┬───────────────┘
-                                            │
-                                            ▼
-        ┌────────────────────────────────────────────────────────────────────────┐
-        │ AGENT 1: Task1ClassificationAgent (Sentiment & Category Classification)│
-        └───────────────────────────────────┬────────────────────────────────────┘
-                                            │
-                          Output / Task 1:  │ • sentiment (positive / negative / sarcastic)
-                                            │ • categorization (Complaint / Question / Statement)
-                                            │ • feedback_area (Quality / Delivery / Pricing / Sizing)
-                                            ├─────────────────────────────┐
-                                            ▼                             ▼
-        ┌──────────────────────────────────────────────┐┌──────────────────────────────────────────────┐
-        │ AGENT 2: Task2AutoReplyAgent                 ││ AGENT 3: Task3RoutingAgent                   │
-        │ Input: Review + Op/Task 1                    ││ Input: Review + Op/Task 1                    │
-        └──────────────────────┬───────────────────────┘└──────────────────────┬───────────────────────┘
-                               │                                               │
-                               ▼                                               ▼
-                   [ Auto reply message ]                               Routing Action:
-                                                                        • ServiceNow (Damaged item/replace)
-                                                                        • Customer service email (Delays)
-                                                                        • Jira (Software/checkout bugs)
-                                                                        • N/A (Positive praise)
-        ```
-        """
-    )
-
     # ── Live Sentiment Analysis Runner (Single & Batch Modes) ──
-    st.markdown("### 🧪 Live Sentiment Analysis Runner")
-    st.caption("Submit individual customer reviews or process high-volume batches concurrently.")
+    st.markdown("### 💬 Interactive Sentiment & Support Triage")
+    st.caption("Submit individual customer reviews or process high-volume batches with automated support routing.")
 
     runner_single, runner_batch = st.tabs(["📝 Single Review Analysis", "⚡ Batch Reviews Analysis"])
 
@@ -1113,72 +1163,52 @@ def render_feedback_intelligence_tab():
                 key="feedback_live_input",
             )
         with col_action:
-            run_graph_btn = st.button("Run LangGraph", use_container_width=True, type="primary", key="btn_run_single")
+            run_graph_btn = st.button("✨ Analyze Review", use_container_width=True, type="primary", key="btn_run_single")
 
         if user_fb and (run_graph_btn or user_fb):
             from app.graphs.feedback_graph import get_feedback_workflow
             wf = get_feedback_workflow()
 
-            with st.spinner("Executing LangGraph StateGraph (Task 1 -> Task 2 & Task 3)..."):
+            with st.spinner("Analyzing sentiment and routing support workflow..."):
                 res = wf.invoke(user_fb)
 
-            st.markdown("#### 📊 LangGraph Pipeline Execution Results")
+            st.markdown("#### ⚡ Analysis & Routing Results")
 
             t1_col, t2_col, t3_col = st.columns(3)
 
             with t1_col:
                 st.markdown(
-                    f"""
-                    <div class="pipeline-card">
-                        <div class="pipeline-card-title">🏷️ Task 1: Classification</div>
-                        <p class="feedback-section-title">SENTIMENT</p>
-                        <p class="feedback-response-text">{res.task1.sentiment.value.capitalize()}</p>
-                        <p class="feedback-section-title">CATEGORIZATION</p>
-                        <p class="feedback-response-text">{res.task1.categorization.value}</p>
-                        <p class="feedback-section-title">FEEDBACK AREA</p>
-                        <p class="feedback-response-text">{res.task1.feedback_area.value}</p>
-                    </div>
-                    """,
+                    pipeline_card_classification_html(
+                        sentiment=res.task1.sentiment.value.capitalize(),
+                        categorization=res.task1.categorization.value,
+                        feedback_area=res.task1.feedback_area.value,
+                        title="🏷️ Sentiment & Category",
+                    ),
                     unsafe_allow_html=True,
                 )
 
             with t2_col:
                 st.markdown(
-                    f"""
-                    <div class="pipeline-card">
-                        <div class="pipeline-card-title">💬 Task 2: Auto-Reply</div>
-                        <p class="feedback-section-title">GENERATED RESPONSE</p>
-                        <p class="feedback-response-text">“{res.task2.auto_reply_message}”</p>
-                    </div>
-                    """,
+                    pipeline_card_response_html(
+                        response_text=res.task2.auto_reply_message,
+                        title="💬 Suggested Response",
+                    ),
                     unsafe_allow_html=True,
                 )
 
             with t3_col:
                 target_val = res.task3.routing_target.value if hasattr(res.task3.routing_target, "value") else str(res.task3.routing_target)
-                if target_val == "Jira":
-                    target_badge_class = "badge-target-jira"
-                elif target_val == "ServiceNow":
-                    target_badge_class = "badge-target-servicenow"
-                elif target_val == "Customer service email":
-                    target_badge_class = "badge-target-email"
-                else:
-                    target_badge_class = "badge-routing-na"
-
                 st.markdown(
-                    f"""
-                    <div class="pipeline-card">
-                        <div class="pipeline-card-title">🚀 Task 3: Workflow Routing</div>
-                        <p class="feedback-section-title">ROUTING TARGET</p>
-                        <p><span class="{target_badge_class}">{target_val}</span></p>
-                        <p class="feedback-section-title">ACTION</p>
-                        <p class="feedback-response-text">{res.task3.routing_action}</p>
-                        <p class="feedback-section-title">PRIORITY</p>
-                        <p class="feedback-response-text">{res.task3.priority.upper()}</p>
-                    </div>
-                    """,
+                    pipeline_card_routing_html(
+                        target_val=target_val,
+                        action=res.task3.routing_action,
+                        priority=res.task3.priority,
+                        title="🚀 Support Action & Routing",
+                    ),
                     unsafe_allow_html=True,
                 )
+
+            st.info(f"**Diagnostic Commentary:** {res.task1.commentary or res.task3.reason}", icon="💡")
 
             st.info(f"**Diagnostic Commentary:** {res.task1.commentary or res.task3.reason}", icon="💡")
 
@@ -1232,7 +1262,7 @@ def render_feedback_intelligence_tab():
                     preview_txt = (rev[:60] + "...") if len(rev) > 60 else rev
                     with st.status(f"⚙️ [{idx+1}/{len(reviews_list)}] Analyzing: “{preview_txt}”", expanded=True) as status_box:
                         st.write(f"📝 **Customer Review:** *\"{rev}\"*")
-                        st.write("🤖 **[Step 1]** Dispatching to `Task1ClassificationAgent` on Groq LPU...")
+                        st.write("🤖 **[Step 1]** Analyzing customer sentiment, intent, and feedback area...")
 
                         t1_out = None
                         t2_out = None
@@ -1241,14 +1271,14 @@ def render_feedback_intelligence_tab():
                         for step in wf.stream_steps(rev):
                             if "classify" in step:
                                 t1_out = step["classify"]["task1"]
-                                st.write(f"🏷️ **Task 1 Classified:** Sentiment = `{t1_out.sentiment.value.upper()}`, Intent = `{t1_out.categorization.value}`, Aspect = `{t1_out.feedback_area.value}`")
-                                st.write("⚡ **[Step 2 & 3]** Parallel Fan-out: Generating Auto-Reply & Determining Workflow Routing...")
+                                st.write(f"🏷️ **Classified:** Sentiment = `{t1_out.sentiment.value.upper()}`, Intent = `{t1_out.categorization.value}`, Aspect = `{t1_out.feedback_area.value}`")
+                                st.write("⚡ **[Step 2 & 3]** Generating personalized auto-reply & determining escalation routing...")
                             if "auto_reply" in step:
                                 t2_out = step["auto_reply"]["task2"]
-                                st.write(f"💬 **Task 2 Auto-Reply:** *\"{t2_out.auto_reply_message}\"*")
+                                st.write(f"💬 **Suggested Response:** *\"{t2_out.auto_reply_message}\"*")
                             if "routing" in step:
                                 t3_out = step["routing"]["task3"]
-                                st.write(f"🚀 **Task 3 Routing Decision:** `{t3_out.routing_target.value}` (`{t3_out.routing_action}`) — Priority: `{t3_out.priority.upper()}`")
+                                st.write(f"🚀 **Support Decision:** `{t3_out.routing_target.value}` (`{t3_out.routing_action}`) — Priority: `{t3_out.priority.upper()}`")
 
                         res_item = FeedbackPipelineResult(
                             review=rev,
@@ -1268,53 +1298,31 @@ def render_feedback_intelligence_tab():
                     col_r1, col_r2, col_r3 = st.columns(3)
                     with col_r1:
                         st.markdown(
-                            f"""
-                            <div class="pipeline-card">
-                                <div class="pipeline-card-title">🏷️ Review {idx+1}: Classification</div>
-                                <p class="feedback-section-title">SENTIMENT</p>
-                                <p class="feedback-response-text">{t1_out.sentiment.value.capitalize()}</p>
-                                <p class="feedback-section-title">CATEGORIZATION</p>
-                                <p class="feedback-response-text">{t1_out.categorization.value}</p>
-                                <p class="feedback-section-title">FEEDBACK AREA</p>
-                                <p class="feedback-response-text">{t1_out.feedback_area.value}</p>
-                            </div>
-                            """,
+                            pipeline_card_classification_html(
+                                sentiment=t1_out.sentiment.value.capitalize(),
+                                categorization=t1_out.categorization.value,
+                                feedback_area=t1_out.feedback_area.value,
+                                title=f"🏷️ Review {idx+1}: Classification",
+                            ),
                             unsafe_allow_html=True,
                         )
                     with col_r2:
                         st.markdown(
-                            f"""
-                            <div class="pipeline-card">
-                                <div class="pipeline-card-title">💬 Auto-Reply</div>
-                                <p class="feedback-section-title">GENERATED RESPONSE</p>
-                                <p class="feedback-response-text">“{t2_out.auto_reply_message}”</p>
-                            </div>
-                            """,
+                            pipeline_card_response_html(
+                                response_text=t2_out.auto_reply_message,
+                                title="💬 Suggested Response",
+                            ),
                             unsafe_allow_html=True,
                         )
                     with col_r3:
                         target_val = t3_out.routing_target.value if hasattr(t3_out.routing_target, "value") else str(t3_out.routing_target)
-                        if target_val == "Jira":
-                            target_badge_class = "badge-target-jira"
-                        elif target_val == "ServiceNow":
-                            target_badge_class = "badge-target-servicenow"
-                        elif target_val == "Customer service email":
-                            target_badge_class = "badge-target-email"
-                        else:
-                            target_badge_class = "badge-routing-na"
-
                         st.markdown(
-                            f"""
-                            <div class="pipeline-card">
-                                <div class="pipeline-card-title">🚀 Workflow Routing</div>
-                                <p class="feedback-section-title">ROUTING TARGET</p>
-                                <p><span class="{target_badge_class}">{target_val}</span></p>
-                                <p class="feedback-section-title">ACTION</p>
-                                <p class="feedback-response-text">{t3_out.routing_action}</p>
-                                <p class="feedback-section-title">PRIORITY</p>
-                                <p class="feedback-response-text">{t3_out.priority.upper()}</p>
-                            </div>
-                            """,
+                            pipeline_card_routing_html(
+                                target_val=target_val,
+                                action=t3_out.routing_action,
+                                priority=t3_out.priority,
+                                title="🚀 Support Routing",
+                            ),
                             unsafe_allow_html=True,
                         )
 
@@ -1408,7 +1416,7 @@ def main():
     initialize_agent()
     render_sidebar()
 
-    tab_chat, tab_intelligence = st.tabs(["🛒 Assistant Chat", "📊 Sentiment Analysis"])
+    tab_chat, tab_intelligence = st.tabs(["🛒 Assistant Chat", "💬 Customer Sentiment"])
     with tab_chat:
         render_chat_area()
     with tab_intelligence:
