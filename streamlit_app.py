@@ -743,6 +743,10 @@ def init_session_state():
         st.session_state.agent_error = None
     if "quick_prompt" not in st.session_state:
         st.session_state.quick_prompt = None
+    if "single_analysis_res" not in st.session_state:
+        st.session_state.single_analysis_res = None
+    if "single_analysis_query" not in st.session_state:
+        st.session_state.single_analysis_query = None
 
 
 def initialize_agent():
@@ -1114,19 +1118,6 @@ def render_feedback_intelligence_tab():
         unsafe_allow_html=True,
     )
 
-    # ── Canonical 4-Card Dashboard Grid ──
-    st.markdown("### 🔍 Analyzed Customer Feedback")
-    st.caption("Live analysis of customer reviews across Sentiment, Feedback Category, and Support Action.")
-
-    sample_cards = SentimentService.get_sample_feedback_cards()
-
-    cols = st.columns(2)
-    for idx, card in enumerate(sample_cards):
-        with cols[idx % 2]:
-            st.markdown(feedback_card_html(card), unsafe_allow_html=True)
-
-    st.divider()
-
     # ── Live Sentiment Analysis Runner (Single & Batch Modes) ──
     st.markdown("### 💬 Interactive Sentiment & Support Triage")
     st.caption("Submit individual customer reviews or process high-volume batches with automated support routing.")
@@ -1144,35 +1135,60 @@ def render_feedback_intelligence_tab():
             "Absolutely love this brand! The wallet I bought is stylish and durable.",
         ]
 
-        selected_sample = st.selectbox(
-            "Or choose a preset scenario:",
-            options=["(Custom text input below)"] + sample_prompts,
-            index=0,
-            key="single_feedback_select",
+        # Mode Selection: Preset Scenarios vs Custom Review (mutually exclusive)
+        input_mode = st.radio(
+            "Select review input source:",
+            options=["🎯 Preset Scenario", "✍️ Custom Review"],
+            horizontal=True,
+            key="single_feedback_mode",
+            help="Choose 'Preset Scenario' to test curated reviews or 'Custom Review' to evaluate your own text.",
         )
 
-        default_text = "" if selected_sample.startswith("(") else selected_sample
-
         col_input, col_action = st.columns([4, 1])
-        with col_input:
-            user_fb = st.text_input(
-                "Enter customer feedback or review comment:",
-                value=default_text,
-                placeholder="e.g. 'The jacket arrived damaged, please replace it.'",
-                label_visibility="collapsed",
-                key="feedback_live_input",
-            )
-        with col_action:
-            run_graph_btn = st.button("✨ Analyze Review", use_container_width=True, type="primary", key="btn_run_single")
 
-        if user_fb and (run_graph_btn or user_fb):
-            from app.graphs.feedback_graph import get_feedback_workflow
-            wf = get_feedback_workflow()
+        if input_mode == "🎯 Preset Scenario":
+            with col_input:
+                review_to_analyze = st.selectbox(
+                    "Choose a preset customer scenario:",
+                    options=sample_prompts,
+                    index=0,
+                    key="single_preset_select",
+                    label_visibility="collapsed",
+                )
+            with col_action:
+                run_graph_btn = st.button("✨ Analyze Review", use_container_width=True, type="primary", key="btn_run_single_preset")
+        else:
+            with col_input:
+                review_to_analyze = st.text_input(
+                    "Enter customer feedback or review comment:",
+                    value="",
+                    placeholder="e.g. 'The jacket arrived damaged, please replace it.'",
+                    label_visibility="collapsed",
+                    key="single_custom_input",
+                )
+            with col_action:
+                run_graph_btn = st.button("✨ Analyze Review", use_container_width=True, type="primary", key="btn_run_single_custom")
 
-            with st.spinner("Analyzing sentiment and routing support workflow..."):
-                res = wf.invoke(user_fb)
+        # Execute analysis when the user triggers the button
+        if run_graph_btn:
+            if review_to_analyze and review_to_analyze.strip():
+                from app.graphs.feedback_graph import get_feedback_workflow
+                wf = get_feedback_workflow()
+
+                with st.spinner("Analyzing sentiment and routing support workflow..."):
+                    res = wf.invoke(review_to_analyze.strip())
+                    st.session_state["single_analysis_res"] = res
+                    st.session_state["single_analysis_query"] = review_to_analyze.strip()
+            else:
+                st.warning("Please enter a customer review before analyzing.", icon="⚠️")
+
+        # Render analysis result cards
+        if st.session_state.get("single_analysis_res") is not None:
+            res = st.session_state["single_analysis_res"]
+            evaluated_text = st.session_state.get("single_analysis_query", "")
 
             st.markdown("#### ⚡ Analysis & Routing Results")
+            st.caption(f"Evaluated review: *“{evaluated_text}”*")
 
             t1_col, t2_col, t3_col = st.columns(3)
 
@@ -1208,9 +1224,10 @@ def render_feedback_intelligence_tab():
                     unsafe_allow_html=True,
                 )
 
-            st.info(f"**Diagnostic Commentary:** {res.task1.commentary or res.task3.reason}", icon="💡")
-
-            st.info(f"**Diagnostic Commentary:** {res.task1.commentary or res.task3.reason}", icon="💡")
+            # Single diagnostic commentary block (fixed duplicate bug)
+            commentary = res.task1.commentary or res.task3.reason
+            if commentary:
+                st.info(f"**Diagnostic Commentary:** {commentary}", icon="💡")
 
     with runner_batch:
         st.markdown("#### ⚡ Concurrent Batch Reviews Processing")

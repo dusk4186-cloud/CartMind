@@ -261,7 +261,20 @@ I found 2 shoes matching your criteria of black shoes under ₹3,000 with a 4-st
 
 ---
 
-## 10. Troubleshooting
+## 10. Customer Sentiment & Support Triage (Canonical Benchmarks)
+
+CartMind processes customer feedback through its 3-task LangGraph pipeline running on Groq (Llama 3.3 70B), performing real-time sentiment polarity detection, category categorization, suggested auto-reply generation, and automated enterprise support routing (ServiceNow, Jira, Email):
+
+| Feedback ID | Customer Review Quote | Sentiment & Category | Suggested Auto-Response | Routing Action |
+| :--- | :--- | :--- | :--- | :--- |
+| **REVIEW 01** | *"Absolutely love this brand! The wallet I bought is stylish and durable."* | `Positive` • `Statement` (N/A) | *"Thank you for your feedback! We're glad you enjoyed your experience."* | `N/A` (Resolved) |
+| **REVIEW 02** | *"The leather jacket fits perfectly and feels premium."* | `Positive` • `Statement` (N/A) | *"We appreciate your kind words! Happy you loved it."* | `N/A` (Resolved) |
+| **REVIEW 03** | *"The jacket arrived damaged, please replace it."* | `Negative` • `Complaint` (`Quality`) | *"We're sorry for the issue. We'll resolve this promptly."* | `ServiceNow Escalation` (Replacement dispatch) |
+| **REVIEW 04** | *"My order was delayed by two weeks, what happened?"* | `Negative` • `Question` (`Delivery`) | *"We apologize for the delay. We're investigating this matter."* | `Customer Support Engineer` (Email outreach) |
+
+---
+
+## 11. Troubleshooting
 
 1. **`UnicodeEncodeError: 'charmap' codec can't encode character '\u20b9'`:**
    - Windows PowerShell console default encoding is `cp1252`.
