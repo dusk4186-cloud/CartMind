@@ -12,12 +12,15 @@ license: mit
 # CartMind — Agentic AI E-Commerce Shopping & Feedback Intelligence
 
 [![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/)
+[![Next.js](https://img.shields.io/badge/Next.js-16+-black.svg)](https://nextjs.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4.svg)](https://tailwindcss.com/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![LangChain](https://img.shields.io/badge/LangChain-v1.4+-black.svg)](https://python.langchain.com/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-v1.2+-orange.svg)](https://github.com/langchain-ai/langgraph)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
 
 > 🚀 **Live Production Deployment:** **[cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app](https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/)**
+> 🎨 **Modern Next.js Frontend:** Located in `frontend/` (Tailwind CSS, Inter font, 8px grid, WCAG AA compliance, Vercel-ready).
 
 A production-grade, enterprise **Agentic AI** shopping and customer experience platform built with **LangChain**, **LangGraph**, **Google Gemini**, **Groq (Llama 3.3 70B)**, and a high-fidelity **FastAPI** backend.
 
@@ -224,6 +227,41 @@ streamlit run streamlit_app.py
   - 🔍 **Live Backend Health Checker** displaying real-time catalogue item and review counts.
   - 🤖 **Interactive Chat** with markdown comparison tables and tone calibration.
   - 🔄 **Live Review Processing Stream** showing sequential agent execution logs for customer feedback triage.
+
+### Step 4: Launch the Next.js + Tailwind CSS Modern Frontend (React 19 / Next.js 16)
+In addition to Streamlit, CartMind provides a production-grade, enterprise web frontend built with **Next.js 16**, **TypeScript**, and **Tailwind CSS**:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Open **[http://localhost:3000](http://localhost:3000)** in your browser.
+- **Features Included:**
+  - 💎 **Creative UI & UX Design System Rules:** Strict 8px-based spacing scale, Inter font typography scale, WCAG AA contrast compliance, semantic color tokens, and Lucide SVG vector icons.
+  - 🛒 **Sidebar Catalogue Explorer:** Live filtering by category, search bar, stock level indicators (`IN STOCK`, `LOW STOCK`, `OUT OF STOCK`), discount calculations, and "Ask About This" 1-click query generation.
+  - 💬 **Smart Shopping Chat Interface:** Real-time conversational agent execution, responsive markdown tables, input sanitization alerts, copy-to-clipboard actions, and sample prompt chips.
+  - 📊 **Feedback Triage Dashboard:** Resolves preset vs. custom review input conflicts, eliminates duplicate diagnostic commentary, displays sentiment badges, auto-reply suggestions with 1-click copy, and ticket routing action badges.
+  - ⚡ **Batch Evaluation Engine:** Concurrently triages customer reviews and streams live structured output.
+
+---
+
+## 8. Cloud Deployment Guide (Render + Vercel)
+
+### Deploying the FastAPI Backend to Render
+CartMind includes a pre-configured [`render.yaml`](render.yaml) blueprint:
+1. Push your repository to GitHub.
+2. Sign in to [Render](https://render.com) and click **New > Blueprint**.
+3. Connect your CartMind repository. Render automatically reads `render.yaml`.
+4. In the Render Dashboard under **Environment**, set your `GEMINI_API_KEY` (and optional `GROQ_API_KEY`).
+5. Click **Apply**. Render will build and deploy your FastAPI backend with a live HTTPS URL (e.g., `https://cartmind-backend.onrender.com`).
+
+### Deploying the Next.js Frontend to Vercel
+1. Sign in to [Vercel](https://vercel.com) and click **Add New Project**.
+2. Select your CartMind repository.
+3. Configure the **Root Directory** as `frontend`.
+4. Under **Environment Variables**, add:
+   - `NEXT_PUBLIC_API_URL`: Your deployed Render backend URL (e.g. `https://cartmind-backend.onrender.com`).
+5. Click **Deploy**. Vercel will build and host your Next.js application with global edge CDN acceleration.
 
 ### Step 4: Run via Docker (Multi-Service Container)
 Build and run both the FastAPI backend and Streamlit frontend in a single production container:
