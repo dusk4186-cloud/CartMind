@@ -652,6 +652,35 @@ def get_backend_status(base_url: str) -> Dict[str, Any]:
         return {"online": False, "error": str(e)}
 
 
+def ensure_backend_running(base_url: str):
+    """Auto-start FastAPI backend in a background daemon thread if running locally and currently offline."""
+    if "127.0.0.1" not in base_url and "localhost" not in base_url:
+        return
+    status = get_backend_status(base_url)
+    if status.get("online"):
+        return
+
+    import threading
+    import time
+    import uvicorn
+    from app.main import app as fastapi_app
+
+    def _run():
+        try:
+            uvicorn.run(fastapi_app, host="127.0.0.1", port=8000, log_level="warning")
+        except Exception:
+            pass
+
+    server_thread = threading.Thread(target=_run, daemon=True)
+    server_thread.start()
+
+    # Wait up to 3 seconds for backend to bind and respond
+    for _ in range(10):
+        time.sleep(0.3)
+        if get_backend_status(base_url).get("online"):
+            break
+
+
 def fetch_catalogue(base_url: str, category: Optional[str] = None, limit: int = 50) -> List[Dict]:
     """Fetch product catalogue from the live backend."""
     try:
@@ -767,6 +796,7 @@ def render_sidebar():
     """Render the sidebar with config, catalogue browser, and quick prompts."""
     config = AgentConfig.get_safe_summary()
     base_url = config["backend_url"]
+    ensure_backend_running(base_url)
     backend = get_backend_status(base_url)
 
     with st.sidebar:

@@ -1,3 +1,14 @@
+---
+title: CartMind - Agentic AI Shopping & CX Intelligence
+emoji: 🛒
+colorFrom: indigo
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
+
 # CartMind — Agentic AI E-Commerce Shopping & Feedback Intelligence
 
 A production-grade, enterprise **Agentic AI** shopping and customer experience platform built with **LangChain**, **LangGraph**, **Google Gemini**, **Groq (Llama 3.3 70B)**, and a high-fidelity **FastAPI** backend.
@@ -204,6 +215,39 @@ streamlit run streamlit_app.py
   - 🔍 **Live Backend Health Checker** displaying real-time catalogue item and review counts.
   - 🤖 **Interactive Chat** with markdown comparison tables and tone calibration.
   - 🔄 **Live Review Processing Stream** showing sequential agent execution logs for customer feedback triage.
+
+### Step 4: Run via Docker (Multi-Service Container)
+Build and run both the FastAPI backend and Streamlit frontend in a single production container:
+```bash
+# Build the container
+docker build -t cartmind:latest .
+
+# Run with environment secrets mapped
+docker run -p 7860:7860 --env-file .env cartmind:latest
+```
+Access the application at [http://localhost:7860](http://localhost:7860).
+
+Or with **Docker Compose**:
+```bash
+docker compose up --build
+```
+
+### Step 5: Deploying to Hugging Face Spaces
+CartMind includes native configuration for Hugging Face Spaces (Docker SDK):
+1. Create a new Space on [Hugging Face Spaces](https://huggingface.co/new-space).
+2. Select **Docker** as the Space SDK and choose the free **CPU basic (2 vCPU, 16GB RAM)** tier.
+3. Add your repository remote or push your code to the Space repository:
+   ```bash
+   git remote add hf https://huggingface.co/spaces/<your-username>/cartmind
+   git push hf main
+   ```
+4. In Space **Settings ➔ Variables and secrets**, add your environment variables:
+   - `GOOGLE_API_KEY`: Your Gemini API key
+   - `GROQ_API_KEY`: Your Groq API key
+   - `GEMINI_MODEL`: `gemini-3.5-flash-lite`
+   - `GROQ_MODEL`: `llama-3.3-70b-versatile`
+   - `FASTAPI_BASE_URL`: `http://127.0.0.1:8000`
+5. The container will automatically build, boot FastAPI on port 8000, and launch Streamlit on port 7860!
 
 ---
 

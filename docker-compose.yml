@@ -1,0 +1,21 @@
+services:
+  cartmind:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cartmind-app
+    ports:
+      - "7860:7860"
+    env_file:
+      - .env
+    environment:
+      - PORT=7860
+      - FASTAPI_PORT=8000
+      - FASTAPI_BASE_URL=http://127.0.0.1:8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
