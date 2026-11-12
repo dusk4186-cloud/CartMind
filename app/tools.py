@@ -387,15 +387,9 @@ def classify_customer_feedback(
     review_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Classify customer feedback or review comment across multi-dimensional criteria:
-    - Sentiment: Positive, Negative, Neutral, or Sarcastic
-    - Feedback Type / Intent: Statement, Complaint, Question, Praise, or Suggestion
-    - Category / Aspect: Quality, Delivery, Pricing, Sizing, Customer Service, or N/A
-    - Commentary: Diagnostic analysis commenting upon the type of feedback made
-    - Suggested Response: Empathetic, actionable suggested response
-    - Routing Action: ServiceNow escalation, Forward to customer support engineer, or N/A
-    Use this tool whenever a customer submits feedback, a complaint, an inquiry about their order or delivery,
-    or whenever asked to diagnose, classify, or comment on customer feedback.
+    Classify customer feedback or review comment across multi-dimensional criteria (Sentiment, Intent, Aspect, Routing).
+    Use this tool ONLY when explicitly asked to analyze customer reviews, evaluate feedback, or diagnose a customer support ticket.
+    Do NOT use this tool for normal shopping questions, product searches, price inquiries, or stock availability checks.
     """
     res = _client.classify_feedback(text=feedback_text, review_id=review_id)
     if not res.get("success"):

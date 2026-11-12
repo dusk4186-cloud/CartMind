@@ -147,13 +147,11 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
                       placeholder="Type your own shopping prompt (e.g. 'Show me casual shoes under ₹2000')..."
-                      className="w-full resize-none bg-transparent text-sm text-[#f8fafc] placeholder-[#94a3b8] focus:outline-none"
+                      className="w-full resize-none border-0 bg-transparent text-sm text-[#f8fafc] placeholder-[#94a3b8] outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 whitespace-pre-wrap break-words leading-relaxed"
+                      style={{ outline: "none", border: "none", boxShadow: "none" }}
                     />
                   </div>
-                  <div className="mt-2 flex items-center justify-between border-t border-[#2d3345]/70 pt-2.5">
-                    <span className="text-[11px] text-[#94a3b8]">
-                      Press Enter ↵ to send
-                    </span>
+                  <div className="mt-2 flex items-center justify-end border-t border-[#2d3345]/70 pt-2.5">
                     <button
                       type="submit"
                       disabled={!input.trim() || isLoading}
@@ -284,9 +282,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
         <div className="shrink-0 border-t border-[#2d3345] bg-[#161922] p-3 sm:p-4 z-20 shadow-2xl">
           <form
             onSubmit={handleSubmit}
-            className="mx-auto flex max-w-4xl flex-col gap-1.5"
+            className="mx-auto flex max-w-4xl flex-col"
           >
-            <div className="relative flex items-end rounded-2xl border border-[#2d3345] bg-[#0f1117] p-2 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
+            <div className="relative flex items-center rounded-2xl border border-[#2d3345] bg-[#0f1117] p-2 transition-all focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
               <textarea
                 ref={textareaRef}
                 rows={1}
@@ -294,7 +292,8 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask follow-up questions about products, comparisons, or prices..."
-                className="max-h-32 min-h-[40px] w-full resize-none bg-transparent px-3 py-2 text-sm text-[#f8fafc] placeholder-[#94a3b8] focus:outline-none"
+                className="max-h-32 min-h-[40px] w-full resize-none border-0 bg-transparent px-3 py-2 text-sm text-[#f8fafc] placeholder-[#94a3b8] outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 whitespace-pre-wrap break-words leading-relaxed"
+                style={{ outline: "none", border: "none", boxShadow: "none" }}
               />
               <button
                 type="submit"
@@ -304,13 +303,6 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
               >
                 <Send className="h-4 w-4" />
               </button>
-            </div>
-
-            <div className="flex items-center justify-between px-2 text-[10px] text-[#94a3b8]">
-              <span>Press Enter to send, Shift + Enter for new line</span>
-              <span className="hidden sm:inline">
-                Prompt Injection & Output Sanitizer Active
-              </span>
             </div>
           </form>
         </div>

@@ -28,9 +28,6 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="text-xl font-bold tracking-tight text-white">
                 Cart<span className="text-indigo-400">Mind</span>
               </span>
-              <span className="hidden rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[10px] font-medium tracking-wider text-indigo-300 uppercase sm:inline-block">
-                AI Agent
-              </span>
             </div>
             <p className="hidden text-xs text-[#94a3b8] sm:block">
               Intelligent E-Commerce Shopping & Feedback Ops
