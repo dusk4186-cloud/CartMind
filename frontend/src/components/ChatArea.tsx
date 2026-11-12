@@ -84,9 +84,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   };
 
   return (
-    <div className="relative flex flex-1 flex-col overflow-hidden bg-[#0f1117]">
+    <div className="relative flex flex-1 min-h-0 flex-col overflow-hidden bg-[#0f1117]">
       {/* Top action bar */}
-      <div className="flex h-12 items-center justify-between border-b border-[#2d3345] bg-[#161922]/50 px-4">
+      <div className="flex h-12 shrink-0 items-center justify-between border-b border-[#2d3345] bg-[#161922]/50 px-4">
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -116,7 +116,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-4xl space-y-6">
           {messages.length === 0 ? (
             /* Empty State / Hero */
@@ -228,7 +228,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
           {isLoading && (
             <div className="flex items-start gap-3 sm:gap-4">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 shadow-md">
-                <Bot className="h-5 w-5 text-white animate-spin" />
+                <Bot className="h-5 w-5 text-white" />
               </div>
               <div className="flex items-center gap-2 rounded-2xl border border-[#2d3345] bg-[#161922] px-4 py-3 text-xs text-[#94a3b8]">
                 <span className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
@@ -246,7 +246,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
       </div>
 
       {/* Sticky Bottom Input Bar */}
-      <div className="border-t border-[#2d3345] bg-[#161922]/90 p-4 backdrop-blur-md">
+      <div className="shrink-0 border-t border-[#2d3345] bg-[#161922] p-3 sm:p-4 z-20 shadow-xl">
         <form
           onSubmit={handleSubmit}
           className="mx-auto flex max-w-4xl flex-col gap-2"
@@ -258,7 +258,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask anything about products, prices, or comparisons..."
+              placeholder="Type your own shopping prompt (e.g. 'Show me casual shoes under ₹2000')..."
               className="max-h-32 min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-sm text-[#f8fafc] placeholder-[#94a3b8] focus:outline-none"
             />
             <button

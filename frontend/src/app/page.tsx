@@ -130,7 +130,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0f1117] text-[#f8fafc]">
+    <div className="flex h-[100dvh] w-screen flex-col overflow-hidden bg-[#0f1117] text-[#f8fafc]">
       {/* Top Header */}
       <Header
         activeTab={activeTab}
@@ -151,7 +151,7 @@ export default function Home() {
       )}
 
       {/* Main Content Area */}
-      <div className="relative flex flex-1 overflow-hidden">
+      <div className="relative flex flex-1 min-h-0 overflow-hidden">
         {activeTab === "assistant" ? (
           <>
             {/* Left Sidebar (Catalogue) */}
