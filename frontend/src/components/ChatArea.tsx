@@ -282,3 +282,4 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
     </div>
   );
 };
+
