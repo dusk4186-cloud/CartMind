@@ -16,6 +16,15 @@ import httpx
 import time
 from typing import Dict, Any, List, Optional
 
+# ── Sync Streamlit Community Cloud secrets into os.environ ────────────
+try:
+    if hasattr(st, "secrets"):
+        for k, v in st.secrets.items():
+            if isinstance(v, (str, int, float, bool)):
+                os.environ[k] = str(v)
+except Exception:
+    pass
+
 # ── Page configuration (must be first Streamlit call) ──────────────────
 st.set_page_config(
     page_title="Smart Shopping Assistant",

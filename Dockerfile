@@ -50,3 +50,4 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=15s \
 
 # Launch both FastAPI backend daemon and Streamlit frontend
 ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
+
