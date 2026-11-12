@@ -18,6 +18,7 @@ from app.routers import (
     sentiment_router,
     support_router,
     feedback_router,
+    agent_router,
 )
 
 
@@ -122,6 +123,7 @@ app.include_router(search_router)
 app.include_router(sentiment_router)
 app.include_router(support_router)
 app.include_router(feedback_router)
+app.include_router(agent_router)
 
 
 @app.get(

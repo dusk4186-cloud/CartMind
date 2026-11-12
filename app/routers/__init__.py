@@ -10,6 +10,7 @@ from app.routers.search import router as search_router
 from app.routers.sentiment import router as sentiment_router
 from app.routers.support import router as support_router
 from app.routers.feedback import router as feedback_router
+from app.routers.agent import router as agent_router
 
 __all__ = [
     "products_router",
@@ -20,6 +21,7 @@ __all__ = [
     "sentiment_router",
     "support_router",
     "feedback_router",
+    "agent_router",
 ]
 
 
