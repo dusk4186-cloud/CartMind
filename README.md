@@ -11,6 +11,14 @@ license: mit
 
 # CartMind — Agentic AI E-Commerce Shopping & Feedback Intelligence
 
+[![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![LangChain](https://img.shields.io/badge/LangChain-v1.4+-black.svg)](https://python.langchain.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-v1.2+-orange.svg)](https://github.com/langchain-ai/langgraph)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
+
+> 🚀 **Live Production Deployment:** **[cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app](https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/)**
+
 A production-grade, enterprise **Agentic AI** shopping and customer experience platform built with **LangChain**, **LangGraph**, **Google Gemini**, **Groq (Llama 3.3 70B)**, and a high-fidelity **FastAPI** backend.
 
 **CartMind is architected around two core mission pillars:**
@@ -202,12 +210,13 @@ In a separate terminal:
 python run_agent.py
 ```
 
-### Step 3: Launch the Streamlit Web UI (Browser)
-Launch the interactive web application:
+### Step 3: Launch the Streamlit Web UI
+- **🌐 Live Cloud Application:** **[https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/](https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/)**
+- **💻 Local Web UI:** [http://localhost:8501](http://localhost:8501)
+Launch locally via terminal:
 ```bash
 streamlit run streamlit_app.py
 ```
-- **Local Web UI:** [http://localhost:8501](http://localhost:8501)
 - **Features Included:**
   - 🎨 **Dark-Mode Modern Design System** with custom typography, badges, and smooth hover states.
   - ⚡ **1-Click Prompt Shortcuts** for instant search queries (Belts under ₹1000, Running shoes comparison, RFID Wallets).
