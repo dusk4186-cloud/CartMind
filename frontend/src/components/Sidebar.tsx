@@ -57,23 +57,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const renderStockBadge = (status: string, quantity: number) => {
     if (status === "in_stock") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium tracking-wider text-emerald-400 uppercase">
-          <CheckCircle2 className="h-3 w-3" />
+        <span className="inline-flex items-center gap-1 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">
+          <CheckCircle2 className="h-2.5 w-2.5" />
           <span>In Stock ({quantity})</span>
         </span>
       );
     }
     if (status === "low_stock") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium tracking-wider text-amber-400 uppercase">
-          <AlertCircle className="h-3 w-3" />
+        <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/20 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-400">
+          <AlertCircle className="h-2.5 w-2.5" />
           <span>Low Stock ({quantity})</span>
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 text-[10px] font-medium tracking-wider text-rose-400 uppercase">
-        <XCircle className="h-3 w-3" />
+      <span className="inline-flex items-center gap-1 rounded-md border border-rose-500/20 bg-rose-500/10 px-1.5 py-0.5 text-[10px] font-medium text-rose-400">
+        <XCircle className="h-2.5 w-2.5" />
         <span>Out of Stock</span>
       </span>
     );
@@ -91,33 +91,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex h-full min-h-0 w-80 shrink-0 flex-col border-r border-[#2d3345] bg-[#161922] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex h-full min-h-0 w-80 shrink-0 flex-col border-r border-[#27272a] bg-[#121215] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
           isOpenMobile ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Top Header */}
-        <div className="flex shrink-0 flex-col gap-3 border-b border-[#2d3345] p-4">
+        <div className="flex shrink-0 flex-col gap-3 border-b border-[#27272a] p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Layers className="h-4 w-4 text-indigo-400" />
-              <h2 className="text-base font-semibold text-[#f8fafc]">
+              <Layers className="h-4 w-4 text-zinc-300" />
+              <h2 className="text-sm font-semibold text-zinc-100">
                 Product Catalogue
               </h2>
             </div>
-            <span className="rounded-full bg-[#1c202d] px-2 py-0.5 text-[10px] font-medium text-[#94a3b8]">
+            <span className="rounded-md bg-zinc-800/80 px-2 py-0.5 text-[10px] font-medium text-zinc-400">
               {filteredProducts.length} items
             </span>
           </div>
 
           {/* Search Box */}
           <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#94a3b8]" />
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-zinc-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search catalogue..."
-              className="w-full rounded-lg border border-[#2d3345] bg-[#0f1117] py-2 pr-3 pl-9 text-xs text-[#f8fafc] placeholder-[#94a3b8] transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-zinc-800 bg-[#09090b] py-2 pr-3 pl-8 text-xs text-zinc-100 placeholder-zinc-500 transition-colors focus:border-zinc-500 focus:outline-none"
             />
           </div>
 
@@ -126,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full appearance-none rounded-lg border border-[#2d3345] bg-[#0f1117] px-3 py-2 text-xs font-medium text-[#f8fafc] transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full appearance-none rounded-lg border border-zinc-800 bg-[#09090b] px-3 py-2 text-xs font-medium text-zinc-200 transition-colors focus:border-zinc-500 focus:outline-none"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
@@ -134,35 +134,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-2.5 h-4 w-4 text-[#94a3b8]" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-2.5 h-3.5 w-3.5 text-zinc-400" />
           </div>
         </div>
 
         {/* Product Cards List */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-2.5">
           {isLoading ? (
             <div className="flex flex-col gap-2 p-2">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="h-24 animate-pulse rounded-xl border border-[#2d3345] bg-[#1c202d]"
+                  className="h-24 animate-pulse rounded-xl border border-zinc-800 bg-zinc-900/60"
                 />
               ))}
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 text-center text-xs text-[#94a3b8]">
-              <Search className="mb-2 h-6 w-6 text-[#94a3b8]/50" />
+            <div className="flex flex-col items-center justify-center p-8 text-center text-xs text-zinc-500">
+              <Search className="mb-2 h-6 w-6 text-zinc-600" />
               <p>No products match your filter criteria.</p>
             </div>
           ) : (
             filteredProducts.map((product) => (
               <div
                 key={product.product_id}
-                className="group relative flex flex-col gap-2 rounded-xl border border-[#2d3345] bg-[#1c202d] p-3 transition-all hover:border-indigo-500/50 hover:bg-[#232838] hover:shadow-md"
+                className="group relative flex flex-col gap-2 rounded-xl border border-zinc-800/90 bg-[#16161a] p-3 transition-all hover:border-zinc-700 hover:bg-[#1a1a20]"
               >
                 {/* Header Row: Title & Stock Badge */}
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-xs font-semibold text-[#f8fafc] group-hover:text-indigo-300">
+                  <h3 className="text-xs font-medium text-zinc-200 group-hover:text-white">
                     {product.name}
                   </h3>
                   {renderStockBadge(
@@ -172,28 +172,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
 
                 {/* Brand & Category Micro-label */}
-                <div className="flex items-center gap-2 text-[10px] text-[#94a3b8]">
-                  <span className="font-medium text-slate-300">
+                <div className="flex items-center gap-2 text-[10px] text-zinc-400">
+                  <span className="font-medium text-zinc-300">
                     {product.brand}
                   </span>
                   <span>•</span>
-                  <span className="rounded bg-[#0f1117] px-1.5 py-0.5 uppercase tracking-wider text-indigo-400">
+                  <span className="rounded bg-[#09090b] px-1.5 py-0.5 uppercase tracking-wider text-zinc-300">
                     {product.category}
                   </span>
                 </div>
 
                 {/* Price & Rating Row */}
-                <div className="mt-1 flex items-center justify-between">
+                <div className="mt-0.5 flex items-center justify-between">
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-sm font-bold text-white">
+                    <span className="text-sm font-semibold text-white">
                       ₹{product.price.toLocaleString("en-IN")}
                     </span>
                     {product.original_price > product.price && (
                       <>
-                        <span className="text-[10px] text-[#94a3b8] line-through">
+                        <span className="text-[10px] text-zinc-500 line-through">
                           ₹{product.original_price.toLocaleString("en-IN")}
                         </span>
-                        <span className="rounded bg-emerald-500/10 px-1 py-0.5 text-[10px] font-semibold text-emerald-400">
+                        <span className="rounded bg-emerald-500/10 px-1 py-0.5 text-[10px] font-medium text-emerald-400">
                           {product.discount_percentage}% OFF
                         </span>
                       </>
@@ -203,7 +203,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div className="flex items-center gap-1 text-[11px] text-amber-400">
                     <Star className="h-3 w-3 fill-amber-400" />
                     <span className="font-medium">{product.rating}</span>
-                    <span className="text-[10px] text-[#94a3b8]">
+                    <span className="text-[10px] text-zinc-500">
                       ({product.review_count})
                     </span>
                   </div>
@@ -218,7 +218,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         `Tell me more about ${product.name} and compare it with similar options.`
                       )
                     }
-                    className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-lg border border-indigo-500/20 bg-indigo-500/10 py-1 text-[11px] font-medium text-indigo-300 opacity-90 transition-all hover:border-indigo-500 hover:bg-indigo-600 hover:text-white group-hover:opacity-100"
+                    className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-lg border border-zinc-700/60 bg-zinc-800/80 py-1 text-[11px] font-medium text-zinc-300 transition-all hover:bg-zinc-700 hover:text-white"
                   >
                     <MessageSquarePlus className="h-3.5 w-3.5" />
                     <span>Ask Assistant About This</span>
@@ -230,9 +230,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="shrink-0 border-t border-[#2d3345] bg-[#0f1117] p-3 text-center text-[10px] text-[#94a3b8]">
+        <div className="shrink-0 border-t border-[#27272a] bg-[#09090b] p-3 text-center text-[10px] text-zinc-500">
           <span className="flex items-center justify-center gap-1">
-            <Sparkles className="h-3 w-3 text-indigo-400" />
+            <Sparkles className="h-3 w-3 text-zinc-400" />
             <span>FastAPI Catalog • Live In-Memory SQLite</span>
           </span>
         </div>
@@ -240,4 +240,3 @@ export const Sidebar: React.FC<SidebarProps> = ({
     </>
   );
 };
-

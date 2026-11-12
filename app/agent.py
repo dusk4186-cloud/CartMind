@@ -5,9 +5,11 @@ enforces mandatory user constraints, synthesizes authentic review evidence,
 and produces evidence-grounded recommendations with dynamic Markdown comparison tables.
 """
 
+import os
 from typing import List, Dict, Any, Optional, Union
 from langchain.agents import create_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
 
 from app.config import AgentConfig
@@ -171,12 +173,30 @@ class EcommerceAgent:
         self.tools = tools or ALL_TOOLS
         self.max_iterations = max_iterations or AgentConfig.get_max_iterations()
 
-        # Initialize LLM
-        self.llm = ChatGoogleGenerativeAI(
+        # Initialize Primary LLM (Google Gemini)
+        self.primary_llm = ChatGoogleGenerativeAI(
             model=self.model_name,
             google_api_key=self.api_key,
-            max_retries=2,
+            max_retries=1,
         )
+
+        # Resilient Fallback Model Router: Groq (Llama 3.3 70B Versatile)
+        fallbacks = []
+        groq_api_key = os.getenv("GROQ_API_KEY")
+        if groq_api_key:
+            groq_model_name = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+            groq_llm = ChatGroq(
+                model_name=groq_model_name,
+                groq_api_key=groq_api_key,
+                max_retries=2,
+                temperature=0.2,
+            )
+            fallbacks.append(groq_llm)
+
+        if fallbacks:
+            self.llm = self.primary_llm.with_fallbacks(fallbacks)
+        else:
+            self.llm = self.primary_llm
 
         # Create modern LangChain agent graph with tool calling
         self.agent_graph = create_agent(
@@ -245,12 +265,11 @@ class EcommerceAgent:
                 f"Tone Guidance: {user_sentiment.tone_advice}]\n\n{active_query}"
             )
             messages.append(HumanMessage(content=hint_prompt))
-        elif fb_type in (FeedbackType.COMPLAINT, FeedbackType.QUESTION, FeedbackType.PRAISE, FeedbackType.SUGGESTION) or any(w in active_query.lower() for w in ["feedback", "review", "delayed", "damaged", "replace"]):
+        elif any(w in active_query.lower() for w in ["my order was", "delayed package", "damaged item", "damaged product", "replace item", "complaint:", "classify feedback:"]):
             hint_prompt = (
                 f"{fb_context}\n"
-                f"[System Instruction: The user has provided feedback or review text. "
-                f"Classify and comment on the type of feedback made (Type, Aspect Category, and Commentary), "
-                f"provide the Suggested Response, and state the Routing Action.]\n\n{active_query}"
+                f"[System Instruction: The user is reporting an order issue or submitting feedback. "
+                f"Address their concern empathetically, provide actionable assistance, and route to support if needed.]\n\n{active_query}"
             )
             messages.append(HumanMessage(content=hint_prompt))
         elif user_sentiment.is_sarcastic or user_sentiment.frustration_level in ("mild", "high"):

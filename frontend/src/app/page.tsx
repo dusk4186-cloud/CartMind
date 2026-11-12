@@ -130,7 +130,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-[100dvh] w-screen flex-col overflow-hidden bg-[#0f1117] text-[#f8fafc]">
+    <div className="flex h-[100dvh] w-screen flex-col overflow-hidden bg-[#09090b] text-[#fafafa]">
       {/* Top Header */}
       <Header
         activeTab={activeTab}

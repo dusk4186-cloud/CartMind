@@ -13,7 +13,6 @@ import {
   Check,
   ShieldAlert,
   PanelLeft,
-  ArrowRight,
 } from "lucide-react";
 import { ChatMessage } from "../lib/types";
 
@@ -85,21 +84,21 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   };
 
   return (
-    <div className="relative flex flex-1 min-h-0 h-full flex-col overflow-hidden bg-[#0f1117]">
+    <div className="relative flex flex-1 min-h-0 h-full flex-col overflow-hidden bg-[#09090b]">
       {/* Top Action Bar */}
-      <div className="flex h-11 shrink-0 items-center justify-between border-b border-[#2d3345] bg-[#161922]/60 px-4">
+      <div className="flex h-11 shrink-0 items-center justify-between border-b border-[#27272a] bg-[#121215]/80 px-4">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onOpenMobileSidebar}
-            className="flex items-center gap-1.5 rounded-lg border border-[#2d3345] bg-[#1c202d] px-2.5 py-1 text-xs font-medium text-[#94a3b8] hover:border-indigo-500/50 hover:text-white lg:hidden"
+            className="flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-xs font-medium text-zinc-400 hover:border-zinc-700 hover:text-white lg:hidden"
           >
             <PanelLeft className="h-3.5 w-3.5" />
             <span>Catalogue</span>
           </button>
-          <div className="hidden items-center gap-2 text-xs text-[#94a3b8] sm:flex">
-            <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
-            <span>Agent: ReAct with Gemini 2.5 Flash</span>
+          <div className="hidden items-center gap-1.5 text-xs text-zinc-400 sm:flex">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            <span>ReAct Agent (Gemini Flash + Groq LPU Fallback)</span>
           </div>
         </div>
 
@@ -108,7 +107,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
             type="button"
             onClick={onClearChat}
             disabled={isLoading}
-            className="flex items-center gap-1 rounded-lg border border-[#2d3345] bg-[#1c202d] px-2.5 py-1 text-xs font-medium text-[#94a3b8] transition-colors hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-400 disabled:opacity-50"
+            className="flex items-center gap-1 rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1 text-xs font-medium text-zinc-400 transition-colors hover:border-zinc-700 hover:text-zinc-200 disabled:opacity-50"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>Clear Chat</span>
@@ -118,44 +117,44 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
 
       {/* Main Content Area */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8">
-        <div className="mx-auto max-w-4xl space-y-6">
+        <div className="mx-auto max-w-3xl space-y-5">
           {messages.length === 0 ? (
             /* Empty State / Hero with Centered Custom Prompt Field */
             <div className="flex flex-col items-center justify-center text-center py-6 sm:py-10">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 shadow-xl shadow-indigo-500/20">
-                <Bot className="h-7 w-7 text-white" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-zinc-700/80 bg-zinc-900 text-zinc-100 shadow-sm">
+                <Bot className="h-6 w-6" />
               </div>
-              <h1 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              <h1 className="mt-3.5 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                 Smart Shopping Assistant
               </h1>
-              <p className="mt-1.5 max-w-md text-xs sm:text-sm text-[#94a3b8]">
-                Ask me anything about product availability, specs, price comparisons, or discounts across our store catalogue.
+              <p className="mt-1.5 max-w-md text-xs sm:text-sm text-zinc-400">
+                Ask anything about product availability, specs, prices, or comparisons across our catalogue.
               </p>
 
               {/* Centered Custom Prompt Input Field */}
               <div className="mt-6 w-full max-w-xl text-left">
                 <form
                   onSubmit={handleSubmit}
-                  className="rounded-2xl border border-indigo-500/40 bg-[#161922] p-3 shadow-2xl shadow-indigo-500/10 transition-all focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500/20"
+                  className="rounded-xl border border-zinc-700/90 bg-[#121215] p-3 shadow-xl transition-all focus-within:border-zinc-500"
                 >
                   <div className="flex items-start gap-2.5">
-                    <Sparkles className="mt-1 h-4 w-4 text-indigo-400 shrink-0" />
+                    <Sparkles className="mt-1 h-4 w-4 text-zinc-400 shrink-0" />
                     <textarea
                       ref={textareaRef}
                       rows={2}
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder="Type your own shopping prompt (e.g. 'Show me casual shoes under ₹2000')..."
-                      className="w-full resize-none border-0 bg-transparent text-sm text-[#f8fafc] placeholder-[#94a3b8] outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 whitespace-pre-wrap break-words leading-relaxed"
+                      placeholder="Type your shopping prompt (e.g. 'Show me casual shoes under ₹2000')..."
+                      className="w-full resize-none border-0 bg-transparent text-sm text-zinc-100 placeholder-zinc-500 outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 whitespace-pre-wrap break-words leading-relaxed"
                       style={{ outline: "none", border: "none", boxShadow: "none" }}
                     />
                   </div>
-                  <div className="mt-2 flex items-center justify-end border-t border-[#2d3345]/70 pt-2.5">
+                  <div className="mt-2 flex items-center justify-end border-t border-zinc-800 pt-2.5">
                     <button
                       type="submit"
                       disabled={!input.trim() || isLoading}
-                      className="flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-indigo-600/30 transition-all hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1.5 rounded-lg bg-white px-4 py-1.5 text-xs font-semibold text-zinc-950 shadow-sm transition-all hover:bg-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <span>Ask Assistant</span>
                       <Send className="h-3.5 w-3.5" />
@@ -166,7 +165,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
 
               {/* Quick Sample Prompts */}
               <div className="mt-6 w-full max-w-xl text-left">
-                <p className="text-xs font-semibold tracking-wider text-[#94a3b8] uppercase">
+                <p className="text-[11px] font-medium tracking-wider text-zinc-400 uppercase">
                   Or pick a sample query:
                 </p>
                 <div className="mt-2.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -175,9 +174,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                       key={idx}
                       type="button"
                       onClick={() => onSendMessage(prompt)}
-                      className="flex items-start gap-2 rounded-xl border border-[#2d3345] bg-[#161922] p-2.5 text-left text-xs text-[#cbd5e1] transition-all hover:border-indigo-500/50 hover:bg-[#1c202d] hover:text-white hover:shadow-md"
+                      className="flex items-start gap-2 rounded-xl border border-zinc-800 bg-[#121215] p-2.5 text-left text-xs text-zinc-300 transition-all hover:border-zinc-700 hover:bg-[#18181b] hover:text-white"
                     >
-                      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-400" />
+                      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400" />
                       <span>{prompt}</span>
                     </button>
                   ))}
@@ -189,27 +188,27 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
             messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex gap-3 sm:gap-4 ${
+                className={`flex gap-3 sm:gap-3.5 ${
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 {message.role === "assistant" && (
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 shadow-md shadow-indigo-600/30">
-                    <Bot className="h-5 w-5 text-white" />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-200 shadow-sm">
+                    <Bot className="h-4 w-4" />
                   </div>
                 )}
 
                 <div
-                  className={`group relative max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-md sm:px-5 sm:py-4 ${
+                  className={`group relative max-w-[85%] sm:max-w-[75%] rounded-xl px-4 py-3 shadow-sm ${
                     message.role === "user"
-                      ? "bg-indigo-600 text-white"
-                      : "border border-[#2d3345] bg-[#161922] text-[#f8fafc]"
+                      ? "border border-zinc-700/70 bg-zinc-800 text-zinc-100"
+                      : "border border-zinc-800/90 bg-[#121215] text-zinc-200"
                   }`}
                 >
                   {/* Security blocked warning */}
                   {message.blockedBySecurity && (
-                    <div className="mb-2 flex items-center gap-2 rounded-lg bg-rose-500/20 px-3 py-1.5 text-xs font-medium text-rose-300">
-                      <ShieldAlert className="h-4 w-4" />
+                    <div className="mb-2 flex items-center gap-2 rounded-md bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-300">
+                      <ShieldAlert className="h-3.5 w-3.5" />
                       <span>Query blocked by security sanitizer</span>
                     </div>
                   )}
@@ -223,12 +222,12 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
 
                   {/* Footer actions for assistant message */}
                   {message.role === "assistant" && (
-                    <div className="mt-3 flex items-center justify-between border-t border-[#2d3345]/50 pt-2 text-[11px] text-[#94a3b8]">
+                    <div className="mt-2.5 flex items-center justify-between border-t border-zinc-800/80 pt-1.5 text-[11px] text-zinc-500">
                       <span>{message.timestamp}</span>
                       <button
                         type="button"
                         onClick={() => copyToClipboard(message.content, message.id)}
-                        className="flex items-center gap-1 rounded px-1.5 py-0.5 hover:bg-[#232838] hover:text-white"
+                        className="flex items-center gap-1 rounded px-1.5 py-0.5 hover:bg-zinc-800 hover:text-zinc-200"
                         title="Copy message"
                       >
                         {copiedId === message.id ? (
@@ -248,8 +247,8 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                 </div>
 
                 {message.role === "user" && (
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#232838] text-[#94a3b8]">
-                    <User className="h-5 w-5" />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-300">
+                    <User className="h-4 w-4" />
                   </div>
                 )}
               </div>
@@ -258,16 +257,16 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
 
           {/* Thinking / Loading State (Static Avatar + 3 Pulsing Dots) */}
           {isLoading && (
-            <div className="flex items-start gap-3 sm:gap-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 shadow-md">
-                <Bot className="h-5 w-5 text-white" />
+            <div className="flex items-start gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-200 shadow-sm">
+                <Bot className="h-4 w-4" />
               </div>
-              <div className="flex items-center gap-2 rounded-2xl border border-[#2d3345] bg-[#161922] px-4 py-3 text-xs text-[#94a3b8]">
-                <span className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
-                <span className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse delay-75" />
-                <span className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse delay-150" />
-                <span className="ml-2 font-medium text-slate-300">
-                  CartMind is reasoning and fetching catalogue data...
+              <div className="flex items-center gap-2 rounded-xl border border-zinc-800 bg-[#121215] px-4 py-2.5 text-xs text-zinc-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-300 animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-300 animate-pulse delay-75" />
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-300 animate-pulse delay-150" />
+                <span className="ml-1.5 font-medium text-zinc-300">
+                  CartMind is querying catalogue and checking inventory...
                 </span>
               </div>
             </div>
@@ -279,12 +278,12 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
 
       {/* Docked Sticky Bottom Input Bar (Active when in conversation) */}
       {messages.length > 0 && (
-        <div className="shrink-0 border-t border-[#2d3345] bg-[#161922] p-3 sm:p-4 z-20 shadow-2xl">
+        <div className="shrink-0 border-t border-[#27272a] bg-[#121215] p-3 sm:p-4 z-20">
           <form
             onSubmit={handleSubmit}
-            className="mx-auto flex max-w-4xl flex-col"
+            className="mx-auto flex max-w-3xl flex-col"
           >
-            <div className="relative flex items-center rounded-2xl border border-[#2d3345] bg-[#0f1117] p-2 transition-all focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
+            <div className="relative flex items-center rounded-xl border border-zinc-800 bg-[#09090b] p-1.5 transition-all focus-within:border-zinc-500">
               <textarea
                 ref={textareaRef}
                 rows={1}
@@ -292,16 +291,16 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask follow-up questions about products, comparisons, or prices..."
-                className="max-h-32 min-h-[40px] w-full resize-none border-0 bg-transparent px-3 py-2 text-sm text-[#f8fafc] placeholder-[#94a3b8] outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 whitespace-pre-wrap break-words leading-relaxed"
+                className="max-h-32 min-h-[38px] w-full resize-none border-0 bg-transparent px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 whitespace-pre-wrap break-words leading-relaxed"
                 style={{ outline: "none", border: "none", boxShadow: "none" }}
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition-all hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-zinc-950 shadow-sm transition-all hover:bg-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed"
                 title="Send Message"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-3.5 w-3.5" />
               </button>
             </div>
           </form>
