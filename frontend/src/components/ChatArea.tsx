@@ -13,6 +13,7 @@ import {
   Check,
   ShieldAlert,
   PanelLeft,
+  ArrowRight,
 } from "lucide-react";
 import { ChatMessage } from "../lib/types";
 
@@ -84,16 +85,16 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   };
 
   return (
-    <div className="relative flex flex-1 min-h-0 flex-col overflow-hidden bg-[#0f1117]">
-      {/* Top action bar */}
-      <div className="flex h-12 shrink-0 items-center justify-between border-b border-[#2d3345] bg-[#161922]/50 px-4">
+    <div className="relative flex flex-1 min-h-0 h-full flex-col overflow-hidden bg-[#0f1117]">
+      {/* Top Action Bar */}
+      <div className="flex h-11 shrink-0 items-center justify-between border-b border-[#2d3345] bg-[#161922]/60 px-4">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onOpenMobileSidebar}
             className="flex items-center gap-1.5 rounded-lg border border-[#2d3345] bg-[#1c202d] px-2.5 py-1 text-xs font-medium text-[#94a3b8] hover:border-indigo-500/50 hover:text-white lg:hidden"
           >
-            <PanelLeft className="h-4 w-4" />
+            <PanelLeft className="h-3.5 w-3.5" />
             <span>Catalogue</span>
           </button>
           <div className="hidden items-center gap-2 text-xs text-[#94a3b8] sm:flex">
@@ -110,40 +111,73 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
             className="flex items-center gap-1 rounded-lg border border-[#2d3345] bg-[#1c202d] px-2.5 py-1 text-xs font-medium text-[#94a3b8] transition-colors hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-400 disabled:opacity-50"
           >
             <Trash2 className="h-3.5 w-3.5" />
-            <span>Clear History</span>
+            <span>Clear Chat</span>
           </button>
         )}
       </div>
 
-      {/* Messages Scroll Area */}
+      {/* Main Content Area */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-4xl space-y-6">
           {messages.length === 0 ? (
-            /* Empty State / Hero */
-            <div className="flex flex-col items-center justify-center pt-8 pb-12 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-400 shadow-xl shadow-indigo-500/20">
-                <Bot className="h-8 w-8 text-white" />
+            /* Empty State / Hero with Centered Custom Prompt Field */
+            <div className="flex flex-col items-center justify-center text-center py-6 sm:py-10">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 shadow-xl shadow-indigo-500/20">
+                <Bot className="h-7 w-7 text-white" />
               </div>
               <h1 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Smart Shopping Assistant
               </h1>
-              <p className="mt-2 max-w-lg text-sm text-[#94a3b8]">
-                Ask me anything about product availability, specs, price
-                comparisons, or discounts across our store catalogue.
+              <p className="mt-1.5 max-w-md text-xs sm:text-sm text-[#94a3b8]">
+                Ask me anything about product availability, specs, price comparisons, or discounts across our store catalogue.
               </p>
 
-              {/* Sample Prompts */}
-              <div className="mt-8 w-full max-w-2xl">
-                <p className="text-left text-xs font-semibold tracking-wider text-[#94a3b8] uppercase">
-                  Quick Sample Prompts
+              {/* Centered Custom Prompt Input Field */}
+              <div className="mt-6 w-full max-w-xl text-left">
+                <form
+                  onSubmit={handleSubmit}
+                  className="rounded-2xl border border-indigo-500/40 bg-[#161922] p-3 shadow-2xl shadow-indigo-500/10 transition-all focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500/20"
+                >
+                  <div className="flex items-start gap-2.5">
+                    <Sparkles className="mt-1 h-4 w-4 text-indigo-400 shrink-0" />
+                    <textarea
+                      ref={textareaRef}
+                      rows={2}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Type your own shopping prompt (e.g. 'Show me casual shoes under ₹2000')..."
+                      className="w-full resize-none bg-transparent text-sm text-[#f8fafc] placeholder-[#94a3b8] focus:outline-none"
+                    />
+                  </div>
+                  <div className="mt-2 flex items-center justify-between border-t border-[#2d3345]/70 pt-2.5">
+                    <span className="text-[11px] text-[#94a3b8]">
+                      Press Enter ↵ to send
+                    </span>
+                    <button
+                      type="submit"
+                      disabled={!input.trim() || isLoading}
+                      className="flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-indigo-600/30 transition-all hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      <span>Ask Assistant</span>
+                      <Send className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Quick Sample Prompts */}
+              <div className="mt-6 w-full max-w-xl text-left">
+                <p className="text-xs font-semibold tracking-wider text-[#94a3b8] uppercase">
+                  Or pick a sample query:
                 </p>
-                <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                <div className="mt-2.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {SAMPLE_PROMPTS.map((prompt, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onClick={() => onSendMessage(prompt)}
-                      className="flex items-start gap-2.5 rounded-xl border border-[#2d3345] bg-[#161922] p-3 text-left text-xs text-[#cbd5e1] transition-all hover:border-indigo-500/50 hover:bg-[#1c202d] hover:text-white hover:shadow-md"
+                      className="flex items-start gap-2 rounded-xl border border-[#2d3345] bg-[#161922] p-2.5 text-left text-xs text-[#cbd5e1] transition-all hover:border-indigo-500/50 hover:bg-[#1c202d] hover:text-white hover:shadow-md"
                     >
                       <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-400" />
                       <span>{prompt}</span>
@@ -224,7 +258,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
             ))
           )}
 
-          {/* Thinking / Loading State */}
+          {/* Thinking / Loading State (Static Avatar + 3 Pulsing Dots) */}
           {isLoading && (
             <div className="flex items-start gap-3 sm:gap-4">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 shadow-md">
@@ -245,41 +279,42 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
         </div>
       </div>
 
-      {/* Sticky Bottom Input Bar */}
-      <div className="shrink-0 border-t border-[#2d3345] bg-[#161922] p-3 sm:p-4 z-20 shadow-xl">
-        <form
-          onSubmit={handleSubmit}
-          className="mx-auto flex max-w-4xl flex-col gap-2"
-        >
-          <div className="relative flex items-end rounded-2xl border border-[#2d3345] bg-[#0f1117] p-2 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type your own shopping prompt (e.g. 'Show me casual shoes under ₹2000')..."
-              className="max-h-32 min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-sm text-[#f8fafc] placeholder-[#94a3b8] focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition-all hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
-              title="Send Message"
-            >
-              <Send className="h-4 w-4" />
-            </button>
-          </div>
+      {/* Docked Sticky Bottom Input Bar (Active when in conversation) */}
+      {messages.length > 0 && (
+        <div className="shrink-0 border-t border-[#2d3345] bg-[#161922] p-3 sm:p-4 z-20 shadow-2xl">
+          <form
+            onSubmit={handleSubmit}
+            className="mx-auto flex max-w-4xl flex-col gap-1.5"
+          >
+            <div className="relative flex items-end rounded-2xl border border-[#2d3345] bg-[#0f1117] p-2 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask follow-up questions about products, comparisons, or prices..."
+                className="max-h-32 min-h-[40px] w-full resize-none bg-transparent px-3 py-2 text-sm text-[#f8fafc] placeholder-[#94a3b8] focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || isLoading}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition-all hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Send Message"
+              >
+                <Send className="h-4 w-4" />
+              </button>
+            </div>
 
-          <div className="flex items-center justify-between px-2 text-[11px] text-[#94a3b8]">
-            <span>Press Enter to send, Shift + Enter for new line</span>
-            <span className="hidden sm:inline">
-              Prompt Injection & Output Sanitization Active
-            </span>
-          </div>
-        </form>
-      </div>
+            <div className="flex items-center justify-between px-2 text-[10px] text-[#94a3b8]">
+              <span>Press Enter to send, Shift + Enter for new line</span>
+              <span className="hidden sm:inline">
+                Prompt Injection & Output Sanitizer Active
+              </span>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
-

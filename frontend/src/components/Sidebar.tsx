@@ -91,12 +91,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-80 flex-col border-r border-[#2d3345] bg-[#161922] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex h-full min-h-0 w-80 shrink-0 flex-col border-r border-[#2d3345] bg-[#161922] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
           isOpenMobile ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Top Header */}
-        <div className="flex flex-col gap-3 border-b border-[#2d3345] p-4">
+        <div className="flex shrink-0 flex-col gap-3 border-b border-[#2d3345] p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-indigo-400" />
@@ -230,7 +230,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="border-t border-[#2d3345] bg-[#0f1117] p-3 text-center text-[10px] text-[#94a3b8]">
+        <div className="shrink-0 border-t border-[#2d3345] bg-[#0f1117] p-3 text-center text-[10px] text-[#94a3b8]">
           <span className="flex items-center justify-center gap-1">
             <Sparkles className="h-3 w-3 text-indigo-400" />
             <span>FastAPI Catalog • Live In-Memory SQLite</span>

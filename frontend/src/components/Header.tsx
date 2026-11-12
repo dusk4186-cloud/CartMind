@@ -16,7 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
   isBackendOnline,
 }) => {
   return (
-    <header className="sticky top-0 z-30 w-full border-b border-[#2d3345] bg-[#0f1117]/90 backdrop-blur-md transition-all">
+    <header className="sticky top-0 z-30 shrink-0 w-full border-b border-[#2d3345] bg-[#0f1117]/90 backdrop-blur-md transition-all">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand & Badge */}
         <div className="flex items-center gap-3">
