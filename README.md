@@ -1,14 +1,3 @@
----
-title: CartMind - Agentic AI Shopping & CX Intelligence
-emoji: 🛒
-colorFrom: indigo
-colorTo: green
-sdk: docker
-app_port: 7860
-pinned: false
-license: mit
----
-
 # CartMind — Agentic AI E-Commerce Shopping & Feedback Intelligence
 
 [![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/)
