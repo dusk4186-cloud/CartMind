@@ -3,8 +3,18 @@ Automated unit and integration tests for LangChain tools and HTTP API client.
 Covers tool-to-endpoint mapping, filtering, error handling, timeouts, and live execution.
 """
 
+import socket
+import pytest
 from unittest.mock import MagicMock
 from app.api_client import EcommerceAPIClient
+
+
+def is_backend_running(host="127.0.0.1", port=8000) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=0.5):
+            return True
+    except OSError:
+        return False
 from app.tools import (
     search_products,
     get_product_catalogue,
@@ -261,6 +271,7 @@ def test_tool_handles_connection_error():
 # ============================================================================
 # 3. Live Integration Tests against Running FastAPI Backend
 # ============================================================================
+@pytest.mark.skipif(not is_backend_running(), reason="FastAPI backend not running at http://127.0.0.1:8000")
 def test_live_backend_all_tools_integration():
     """Live integration test against running FastAPI backend."""
     live_client = EcommerceAPIClient(base_url="http://127.0.0.1:8000")

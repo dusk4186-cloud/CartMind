@@ -4,7 +4,17 @@ Playwright automated test script for Swagger UI testing of /api/search.
 
 import asyncio
 import os
+import socket
+import pytest
 from playwright.async_api import async_playwright
+
+
+def is_backend_running(host="127.0.0.1", port=8000) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=0.5):
+            return True
+    except OSError:
+        return False
 
 
 async def _async_test_swagger_ui_search():
@@ -71,6 +81,7 @@ async def _async_test_swagger_ui_search():
         print("\nAll Swagger UI Playwright tests PASSED successfully!")
 
 
+@pytest.mark.skipif(not is_backend_running(), reason="FastAPI backend not running at http://127.0.0.1:8000")
 def test_swagger_ui_search():
     """Pytest entrypoint executing the Playwright browser test."""
     asyncio.run(_async_test_swagger_ui_search())

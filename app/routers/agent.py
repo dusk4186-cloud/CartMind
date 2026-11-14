@@ -49,7 +49,7 @@ class FeedbackAnalysisRequest(BaseModel):
 
 
 class BatchFeedbackRequest(BaseModel):
-    reviews: List[str] = Field(..., min_items=1, description="List of reviews to process concurrently")
+    reviews: List[str] = Field(..., min_length=1, description="List of reviews to process concurrently")
     max_workers: int = Field(default=5, ge=1, le=10)
 
 
