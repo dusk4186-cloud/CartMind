@@ -1,10 +1,10 @@
 # CartMind — Agentic AI E-Commerce Shopping & Feedback Intelligence
 
 [![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cartmind-ldonwp6c2dyc9unjjfedck.streamlit.app/)
-[![Next.js](https://img.shields.io/badge/Next.js-16+-black.svg)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16+-yellow.svg)](https://nextjs.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4.svg)](https://tailwindcss.com/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![LangChain](https://img.shields.io/badge/LangChain-v1.4+-black.svg)](https://python.langchain.com/)
+[![LangChain](https://img.shields.io/badge/LangChain-v1.4+-purple.svg)](https://python.langchain.com/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-v1.2+-orange.svg)](https://github.com/langchain-ai/langgraph)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
 
